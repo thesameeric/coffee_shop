@@ -20,7 +20,7 @@ export const client = new DynamoDBClient({
     }),
 });
 export const docClient = DynamoDBDocumentClient.from(client);
-export const TABLE_NAME = 'ItemsTable';
+export const TABLE_NAME = process.env.DYNAMODB_TABLE;
 
 export function formatResponse<T>(statusCode: number, body: T): ApiResponse<T> {
     return {
