@@ -1,0 +1,85 @@
+org: thesameeric
+app: sguru
+service: apis
+
+plugins:
+  - serverless-dynamodb
+  - serverless-offline
+custom:
+  serverless-dynamo:
+    stages:
+      - dev
+    start:
+      port: 8000
+      docker: false
+      inMemory: true
+      migrate: true
+      region: localhost
+    options:
+      accessKeyId: mock
+      secretAccessKey: mock
+      region: localhost
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: ${opt:stage, 'dev'}
+  environment:
+    DYNAMODB_TABLE: coffee-shop
+    AWS_ACCESS_KEY_ID: mock
+    AWS_SECRET_ACCESS_KEY: mock
+    SERVERLESS_ACCESS_KEY: AKPXeGqyM62D6NJVpmX5cYBnrzp7sVPZupW6FNaNHYSnv
+  apiGateway:
+    minimumCompressionSize: 1024
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource: "*"
+
+functions:
+  create:
+    handler: src/handlers/create.handler
+    events:
+      - http:
+          path: items
+          method: post
+          cors: true
+  getAll:
+    handler: src/handlers/read.handler
+    events:
+      - http:
+          path: items
+          method: get
+          cors: true
+  getOne:
+    handler: src/handlers/getOne.handler
+    events:
+      - http:
+          path: items/{id}
+          method: get
+          cors: true
+  update:
+    handler: src/handlers/update.handler
+    events:
+      - http:
+          path: items/{id}
+          method: put
+          cors: true
+
+resources:
+  Resources:
+    ItemsTable:
+      Type: "AWS::DynamoDB::Table"
+      Properties:
+        TableName: coffee-shop
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
