@@ -29,7 +29,7 @@ provider:
     DYNAMODB_TABLE: coffee-shop
     AWS_ACCESS_KEY_ID: mock
     AWS_SECRET_ACCESS_KEY: mock
-    SERVERLESS_ACCESS_KEY: AKPXeGqyM62D6NJVpmX5cYBnrzp7sVPZupW6FNaNHYSnv
+    IS_OFFLINE: ${opt:stage, 'dev'} == 'dev'
   apiGateway:
     minimumCompressionSize: 1024
   iam:

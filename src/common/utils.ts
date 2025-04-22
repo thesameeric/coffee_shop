@@ -5,14 +5,19 @@ import {
 import { APIGatewayProxyEvent } from 'aws-lambda';
 import { z, ZodError } from 'zod';
 import { ApiResponse, ErrorResponse } from './types';
+import dotenv from 'dotenv';
+dotenv.config();
 
+const isOffline = process.env.IS_OFFLINE === 'true';
 export const client = new DynamoDBClient({
     region: "us-east-1",
-    endpoint: "http://localhost:8091",
-    credentials: {
-        accessKeyId: "mock",
-        secretAccessKey: "mock",
-    },
+    ...(isOffline && {
+        endpoint: "http://localhost:8091",
+        credentials: {
+            accessKeyId: "fake",      // required for local Dynamo
+            secretAccessKey: "fake",
+        },
+    }),
 });
 export const docClient = DynamoDBDocumentClient.from(client);
 export const TABLE_NAME = 'ItemsTable';
@@ -51,3 +56,4 @@ export function parseBody<T>(event: APIGatewayProxyEvent, schema: z.ZodType<T>):
     const json = JSON.parse(event.body);
     return schema.parse(json);
 }
+
