@@ -34,8 +34,6 @@ export function formatResponse<T>(statusCode: number, body: T): ApiResponse<T> {
 }
 
 export function handleError(error: unknown): ApiResponse<ErrorResponse> {
-    console.error('Error:', error);
-
     if (error instanceof ZodError) {
         return formatResponse(400, {
             error: 'Validation error',

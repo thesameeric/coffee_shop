@@ -27,12 +27,12 @@ describe('Create Handler', () => {
         // Check response
         expect(response.statusCode).toBe(201);
 
-        const body = JSON.parse(response.body);
-        expect(body).toHaveProperty('id');
-        expect(body).toHaveProperty('name', 'Test Item');
-        expect(body).toHaveProperty('description', 'This is a test item');
-        expect(body).toHaveProperty('createdAt');
-        expect(body).toHaveProperty('updatedAt');
+        const { data } = JSON.parse(response.body);
+        expect(data).toHaveProperty('id');
+        expect(data).toHaveProperty('name', 'Test Item');
+        expect(data).toHaveProperty('description', 'This is a test item');
+        expect(data).toHaveProperty('createdAt');
+        expect(data).toHaveProperty('updatedAt');
 
         // Verify DynamoDB was called
         const putCommandCalls = mockDocClient.commandCalls(PutCommand);
