@@ -38,13 +38,11 @@ export function handleError(error: unknown): ApiResponse<ErrorResponse> {
         } as any);
     }
 
-    // Handle other errors
     return formatResponse(500, {
         error: error instanceof Error ? error.message : 'An unknown error occurred',
     });
 }
 
-// Parse and validate request body with Zod schema
 export function parseBody<T>(event: APIGatewayProxyEvent, schema: z.ZodType<T>): T {
     if (!event.body) {
         throw new Error('Missing request body');

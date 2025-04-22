@@ -69,6 +69,13 @@ functions:
           path: items/{id}
           method: put
           cors: true
+  delete:
+    handler: src/handlers/delete.handler
+    events:
+      - http:
+          path: items/{id}
+          method: delete
+          cors: true
 
 resources:
   Resources:
