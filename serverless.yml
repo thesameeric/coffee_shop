@@ -15,10 +15,10 @@ custom:
       inMemory: true
       migrate: true
       region: localhost
-    options:
-      accessKeyId: mock
-      secretAccessKey: mock
-      region: localhost
+  dev:
+    logLevel: DEBUG
+  prod:
+    logLevel: INFO
 
 provider:
   name: aws
@@ -39,6 +39,9 @@ provider:
           Action:
             - dynamodb:*
           Resource: "*"
+package:
+  individually: true
+  excludeDevDependencies: true
 
 functions:
   create:
