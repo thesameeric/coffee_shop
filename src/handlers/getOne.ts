@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { GetCommand } from '@aws-sdk/lib-dynamodb';
-import { ItemResponse } from '../common/types';
+import { OrderResponse } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError } from '../common/utils';
 
 /**
@@ -30,7 +30,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         }
 
         // Parse item as the expected type
-        const item = response.Item as ItemResponse;
+        const item = response.Item as OrderResponse;
 
         // Return the item
         return formatResponse(200, item);

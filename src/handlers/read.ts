@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { ScanCommand } from '@aws-sdk/lib-dynamodb';
-import { ItemResponse } from '../common/types';
+import { OrderResponse } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError } from '../common/utils';
 
 /**
@@ -16,7 +16,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             })
         );
 
-        const items = response.Items as ItemResponse[];
+        const items = response.Items as OrderResponse[];
 
         return formatResponse(200, items || []);
     } catch (error) {

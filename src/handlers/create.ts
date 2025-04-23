@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
-import { Item, ItemSchema, ItemResponse } from '../common/types';
+import { Order, OrderSchema, OrderResponse } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError, parseBody } from '../common/utils';
 
 /**
@@ -11,13 +11,13 @@ import { docClient, TABLE_NAME, formatResponse, handleError, parseBody } from '.
  */
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-        const item: Item = parseBody(event, ItemSchema);
+        const order: Order = parseBody(event, OrderSchema);
         const timestamp = Date.now();
         const id = uuidv4();
 
-        const newItem: ItemResponse = {
-            ...item,
+        const newItem: OrderResponse = {
             id,
+            ...order,
             createdAt: timestamp,
             updatedAt: timestamp,
         };

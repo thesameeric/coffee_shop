@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { GetCommand, UpdateCommand } from '@aws-sdk/lib-dynamodb';
-import { Item, ItemSchema, ItemResponse } from '../common/types';
+import { Order, OrderSchema, OrderResponse } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError, parseBody } from '../common/utils';
 
 /**
@@ -16,7 +16,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             return formatResponse(400, { error: 'Missing item ID' });
         }
 
-        const updatedItem: Item = parseBody(event, ItemSchema);
+        const updatedItem: Order = parseBody(event, OrderSchema);
         const existingItemResponse = await docClient.send(
             new GetCommand({
                 TableName: TABLE_NAME,
@@ -47,10 +47,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         );
 
         // Parse updated item as the expected type
-        const item = response.Attributes as ItemResponse;
+        const order = response.Attributes as OrderResponse;
 
         // Return the updated item
-        return formatResponse(200, item);
+        return formatResponse(200, order);
     } catch (error) {
         return handleError(error);
     }

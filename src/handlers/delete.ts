@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { GetCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
-import { ItemResponse } from '../common/types';
+import { OrderResponse } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError } from '../common/utils';
 
 /**
@@ -35,7 +35,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             })
         );
 
-        const deletedItem = response.Attributes as ItemResponse;
+        const deletedItem = response.Attributes as OrderResponse;
 
         return formatResponse(200, {
             message: 'Item deleted successfully',
