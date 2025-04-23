@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent } from 'aws-lambda';
-import { handler } from '../src/handlers/create';
+import { handler } from '../src/handlers/createOrder';
 import { docClient } from '../src/common/utils';
 import { mockClient } from 'aws-sdk-client-mock';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';

@@ -12,7 +12,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
     try {
         const queryParams = event.queryStringParameters || {};
         const limit = queryParams.limit ? parseInt(queryParams.limit, 10) : 20; // Default limit is 20
-        const lastEvaluatedKey = queryParams.nextToken ? JSON.parse(decodeURIComponent(queryParams.nextToken)) : undefined;
+        const lastEvaluatedKey = queryParams.nextToken ? JSON.parse(decodeURIComponent(queryParams.nextToken)) : undefined;        
 
         const response = await docClient.send(
             new ScanCommand({
@@ -23,7 +23,6 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         );
 
         const orders = response.Items as OrderResponse[];
-
         const responseBody = {
             data: orders || [],
             nextToken: response.LastEvaluatedKey

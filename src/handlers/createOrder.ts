@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { PutCommand } from '@aws-sdk/lib-dynamodb';
 import { v4 as uuidv4 } from 'uuid';
-import { Order, OrderSchema, OrderResponse } from '../common/types';
+import { OrderSchema, calculateTotalPrice } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError, parseBody } from '../common/utils';
 
 /**
@@ -11,13 +11,15 @@ import { docClient, TABLE_NAME, formatResponse, handleError, parseBody } from '.
  */
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
-        const order: Order = parseBody(event, OrderSchema);
-        const timestamp = Date.now();
+        const order = parseBody(event, OrderSchema);
+        const timestamp = new Date().toISOString();
         const id = uuidv4();
 
-        const newItem: OrderResponse = {
+        const price = calculateTotalPrice(order.coffeeType, order.cupSize, order.quantity)
+        const newOrder = {
             id,
             ...order,
+            totalPrice: price,
             createdAt: timestamp,
             updatedAt: timestamp,
         };
@@ -25,11 +27,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         await docClient.send(
             new PutCommand({
                 TableName: TABLE_NAME,
-                Item: newItem,
+                Item: newOrder,
             })
-        );
-
-        return formatResponse(201, { message: 'Item created successfully', data: newItem });
+        );        
+        return formatResponse(201, { message: 'Item created successfully', data: newOrder });
     } catch (error) {
         return handleError(error);
     }
