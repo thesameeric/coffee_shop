@@ -6,10 +6,9 @@ module.exports = {
         '^.+\\.(t|j)s$': 'ts-jest',
     },
     collectCoverageFrom: [
-        '!**/tests/**',
-        '**/src/**/*.{js,ts}',
-        '!**.test.js',
-        '!**/node_modules/**',
+        'src/**/*.{js,ts}',
+        '!src/**/*.test.{js,ts}',
+        '!src/**/*.spec.{js,ts}',
     ],
     // The directory where Jest should output its coverage files
     coverageDirectory: 'coverage',

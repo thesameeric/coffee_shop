@@ -13,7 +13,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         const id = event.pathParameters?.id;
 
         if (!id) {
-            return formatResponse(400, { error: 'Missing item ID' });
+            return formatResponse(400, { error: 'Order ID is required' });
         }
 
         const existingItemResponse = await docClient.send(
@@ -24,10 +24,10 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
         );
 
         if (!existingItemResponse.Item) {
-            return formatResponse(404, { error: 'Item not found' });
+            return formatResponse(404, { error: 'Order not found' });
         }
 
-        const response = await docClient.send(
+        await docClient.send(
             new DeleteCommand({
                 TableName: TABLE_NAME,
                 Key: { id },
@@ -35,11 +35,8 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             })
         );
 
-        const deletedItem = response.Attributes as OrderResponse;
-
-        return formatResponse(200, {
-            message: 'Item deleted successfully',
-            deletedItem,
+        return formatResponse(204, {
+            message: '',
         });
     } catch (error) {
         return handleError(error);

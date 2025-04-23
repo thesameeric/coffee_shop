@@ -6,6 +6,15 @@ import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 const mockDocClient = mockClient(docClient);
 
+const mockOrder = {
+    "name": "Ben",
+    "cupSize": "large",
+    "coffeeType": "latte",
+    "address": "mayfair",
+    "paymentStatus": "pending",
+    "paymentMethod": "cash",
+    "quantity": 1
+}
 describe('Create Handler', () => {
     beforeEach(() => {
         mockDocClient.reset();
@@ -13,28 +22,26 @@ describe('Create Handler', () => {
     });
 
     test('should create a new item successfully', async () => {
-        // Create mock event
         const event = {
-            body: JSON.stringify({
-                name: 'Test Item',
-                description: 'This is a test item'
-            })
+            body: JSON.stringify(mockOrder)
         } as APIGatewayProxyEvent;
 
-        // Call handler
         const response = await handler(event);
-
-        // Check response
         expect(response.statusCode).toBe(201);
 
         const { data } = JSON.parse(response.body);
         expect(data).toHaveProperty('id');
-        expect(data).toHaveProperty('name', 'Test Item');
-        expect(data).toHaveProperty('description', 'This is a test item');
+        expect(data).toHaveProperty('name', 'Ben');
+        expect(data).toHaveProperty('cupSize', 'large');
+        expect(data).toHaveProperty('coffeeType', 'latte');
+        expect(data).toHaveProperty('address', 'mayfair');
+        expect(data).toHaveProperty('paymentStatus', 'pending');
+        expect(data).toHaveProperty('paymentMethod', 'cash');
+        expect(data).toHaveProperty('quantity', 1);
+        expect(data).toHaveProperty('status', 'pending');
         expect(data).toHaveProperty('createdAt');
         expect(data).toHaveProperty('updatedAt');
 
-        // Verify DynamoDB was called
         const putCommandCalls = mockDocClient.commandCalls(PutCommand);
         expect(putCommandCalls).toHaveLength(1);
     });
@@ -42,15 +49,10 @@ describe('Create Handler', () => {
     test('should return 400 when validation fails', async () => {
         // Create mock event with invalid data (missing name)
         const event = {
-            body: JSON.stringify({
-                description: 'This is a test item without a name'
-            })
+            body: JSON.stringify({...mockOrder, coffeeType: 'black'})
         } as APIGatewayProxyEvent;
 
-        // Call handler
         const response = await handler(event);
-
-        // Check response
         expect(response.statusCode).toBe(400);
 
         const body = JSON.parse(response.body);
