@@ -43,14 +43,14 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
+      
+      - name: Run tests
+        run: yarn test
 
       - name: Serverless Deploy
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
         run: serverless deploy --stage ${STAGE} --verbose
-
-      - name: Run tests
-        run: yarn test
 
       - name: Send deployment notification
         if: success()
