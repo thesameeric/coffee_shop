@@ -10,15 +10,28 @@ import { docClient, TABLE_NAME, formatResponse, handleError } from '../common/ut
  */
 export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     try {
+        const queryParams = event.queryStringParameters || {};
+        const limit = queryParams.limit ? parseInt(queryParams.limit, 10) : 20; // Default limit is 20
+        const lastEvaluatedKey = queryParams.nextToken ? JSON.parse(decodeURIComponent(queryParams.nextToken)) : undefined;
+
         const response = await docClient.send(
             new ScanCommand({
                 TableName: TABLE_NAME,
+                Limit: limit,
+                ExclusiveStartKey: lastEvaluatedKey,
             })
         );
 
-        const items = response.Items as OrderResponse[];
+        const orders = response.Items as OrderResponse[];
 
-        return formatResponse(200, items || []);
+        const responseBody = {
+            data: orders || [],
+            nextToken: response.LastEvaluatedKey
+                ? encodeURIComponent(JSON.stringify(response.LastEvaluatedKey))
+                : null
+        };
+
+        return formatResponse(200, responseBody);
     } catch (error) {
         return handleError(error);
     }
