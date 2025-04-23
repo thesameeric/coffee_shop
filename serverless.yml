@@ -43,35 +43,35 @@ package:
 
 functions:
   create:
-    handler: src/handlers/create.handler
+    handler: src/handlers/createOrder.handler
     events:
       - http:
           path: items
           method: post
           cors: true
   getAll:
-    handler: src/handlers/read.handler
+    handler: src/handlers/getOrders.handler
     events:
       - http:
           path: items
           method: get
           cors: true
   getOne:
-    handler: src/handlers/getOne.handler
+    handler: src/handlers/getOrder.handler
     events:
       - http:
           path: items/{id}
           method: get
           cors: true
   update:
-    handler: src/handlers/update.handler
+    handler: src/handlers/updateOrder.handler
     events:
       - http:
           path: items/{id}
           method: put
           cors: true
   delete:
-    handler: src/handlers/delete.handler
+    handler: src/handlers/deleteOrder.handler
     events:
       - http:
           path: items/{id}
