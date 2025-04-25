@@ -30,7 +30,7 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                 Item: newOrder,
             })
         );        
-        return formatResponse(201, { message: 'Item created successfully', data: newOrder });
+        return formatResponse(201, { message: 'Order created successfully', data: newOrder });
     } catch (error) {
         return handleError(error);
     }

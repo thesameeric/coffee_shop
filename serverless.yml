@@ -46,35 +46,35 @@ functions:
     handler: src/handlers/createOrder.handler
     events:
       - http:
-          path: items
+          path: orders
           method: post
           cors: true
   getAll:
     handler: src/handlers/getOrders.handler
     events:
       - http:
-          path: items
+          path: orders
           method: get
           cors: true
   getOne:
     handler: src/handlers/getOrder.handler
     events:
       - http:
-          path: items/{id}
+          path: orders/{id}
           method: get
           cors: true
   update:
     handler: src/handlers/updateOrder.handler
     events:
       - http:
-          path: items/{id}
+          path: orders/{id}
           method: put
           cors: true
   delete:
     handler: src/handlers/deleteOrder.handler
     events:
       - http:
-          path: items/{id}
+          path: orders/{id}
           method: delete
           cors: true
 

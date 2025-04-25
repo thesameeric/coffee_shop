@@ -16,19 +16,19 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             return formatResponse(400, { error: 'Missing order ID' });
         }
 
-        const updatedItem = parseBody(event, OrderSchema);
-        const existingItemResponse = await docClient.send(
+        const updatedOrder = parseBody(event, OrderSchema);
+        const existingOrderResponse = await docClient.send(
             new GetCommand({
                 TableName: TABLE_NAME,
                 Key: { id },
             })
         );
 
-        if (!existingItemResponse.Item) {
+        if (!existingOrderResponse.Item) {
             return formatResponse(404, { error: 'Order not found' });
         }
 
-        const price = calculateTotalPrice(updatedItem.coffeeType, updatedItem.cupSize, updatedItem.quantity)
+        const price = calculateTotalPrice(updatedOrder.coffeeType, updatedOrder.cupSize, updatedOrder.quantity)
 
         const timestamp = new Date().toISOString();
         const response = await docClient.send(
@@ -41,16 +41,16 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
                     '#status': 'status', // 'status' is a reserved word in DynamoDB
                 },
                 ExpressionAttributeValues: {
-                    ':name': updatedItem.name,
-                    ':description': updatedItem.description || '',
+                    ':name': updatedOrder.name,
+                    ':description': updatedOrder.description || '',
                     ':updatedAt': timestamp,
-                    ':coffeeType': updatedItem.coffeeType,
-                    ':cupSize': updatedItem.cupSize,
-                    ':quantity': updatedItem.quantity,
-                    ':status': updatedItem.status,
-                    ':paymentMethod': updatedItem.paymentMethod,
-                    ':paymentStatus': updatedItem.paymentStatus,
-                    ':address': updatedItem.address,
+                    ':coffeeType': updatedOrder.coffeeType,
+                    ':cupSize': updatedOrder.cupSize,
+                    ':quantity': updatedOrder.quantity,
+                    ':status': updatedOrder.status,
+                    ':paymentMethod': updatedOrder.paymentMethod,
+                    ':paymentStatus': updatedOrder.paymentStatus,
+                    ':address': updatedOrder.address,
                     ':totalPrice': price,
                 },
                 ConditionExpression: 'attribute_exists(id)',

@@ -1,6 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda';
 import { GetCommand, DeleteCommand } from '@aws-sdk/lib-dynamodb';
-import { OrderResponse } from '../common/types';
 import { docClient, TABLE_NAME, formatResponse, handleError } from '../common/utils';
 
 /**
@@ -16,14 +15,14 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             return formatResponse(400, { error: 'Order ID is required' });
         }
 
-        const existingItemResponse = await docClient.send(
+        const existingOrderResponse = await docClient.send(
             new GetCommand({
                 TableName: TABLE_NAME,
                 Key: { id },
             })
         );
 
-        if (!existingItemResponse.Item) {
+        if (!existingOrderResponse.Item) {
             return formatResponse(404, { error: 'Order not found' });
         }
 
