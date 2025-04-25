@@ -19,6 +19,7 @@ custom:
     logLevel: DEBUG
   prod:
     logLevel: INFO
+  tableName: coffee-shop-${opt:stage, 'dev'}
 
 provider:
   name: aws
@@ -26,7 +27,7 @@ provider:
   region: us-east-1
   stage: ${opt:stage, 'dev'}
   environment:
-    DYNAMODB_TABLE: coffee-shop
+    DYNAMODB_TABLE: ${self:custom.tableName}
     IS_OFFLINE: ${opt:stage, 'dev'} == 'dev'
   apiGateway:
     minimumCompressionSize: 1024
@@ -46,35 +47,35 @@ functions:
     handler: src/handlers/createOrder.handler
     events:
       - http:
-          path: items
+          path: orders
           method: post
           cors: true
   getAll:
     handler: src/handlers/getOrders.handler
     events:
       - http:
-          path: items
+          path: orders
           method: get
           cors: true
   getOne:
     handler: src/handlers/getOrder.handler
     events:
       - http:
-          path: items/{id}
+          path: orders/{id}
           method: get
           cors: true
   update:
     handler: src/handlers/updateOrder.handler
     events:
       - http:
-          path: items/{id}
+          path: orders/{id}
           method: put
           cors: true
   delete:
     handler: src/handlers/deleteOrder.handler
     events:
       - http:
-          path: items/{id}
+          path: orders/{id}
           method: delete
           cors: true
 
@@ -83,7 +84,7 @@ resources:
     ItemsTable:
       Type: "AWS::DynamoDB::Table"
       Properties:
-        TableName: coffee-shop
+        TableName: ${self:custom.tableName}
         BillingMode: PAY_PER_REQUEST
         AttributeDefinitions:
           - AttributeName: id

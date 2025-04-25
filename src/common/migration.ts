@@ -1,17 +1,17 @@
-const { DynamoDBClient, CreateTableCommand } = require("@aws-sdk/client-dynamodb");
-import { client } from "./utils"; // Adjust the import path as necessary
-// Define the table schema based on your ItemResponseSchema
-const params = {
-    TableName: "ItemsTable",  // Name of the table
+import { CreateTableCommand, CreateTableCommandInput } from "@aws-sdk/client-dynamodb";
+import { client } from "./utils";
+
+const params: CreateTableCommandInput = {
+    TableName: "coffee-shop",
     KeySchema: [
-        { AttributeName: "id", KeyType: "HASH" },  // Partition key
+        { AttributeName: "id", KeyType: "HASH" },
     ],
     AttributeDefinitions: [
-        { AttributeName: "id", AttributeType: "S" }, // String type for id (UUID)
+        { AttributeName: "id", AttributeType: "S" },
     ],
     ProvisionedThroughput: {
-        ReadCapacityUnits: 5,  // You can adjust these
-        WriteCapacityUnits: 5, // You can adjust these
+        ReadCapacityUnits: 5,
+        WriteCapacityUnits: 5,
     },
 };
 

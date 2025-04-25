@@ -24,16 +24,12 @@ export const handler = async (event: APIGatewayProxyEvent): Promise<APIGatewayPr
             })
         );
 
-        // Check if item exists
         if (!response.Item) {
             return formatResponse(404, { error: 'Item not found' });
         }
 
-        // Parse item as the expected type
-        const item = response.Item as OrderResponse;
-
-        // Return the item
-        return formatResponse(200, item);
+        const order = response.Item as OrderResponse;
+        return formatResponse(200, order);
     } catch (error) {
         return handleError(error);
     }
